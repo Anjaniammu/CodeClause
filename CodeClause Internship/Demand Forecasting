@@ -1,0 +1,34 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from statsmodels.tsa.arima.model import ARIMA
+
+# Generate random sales data for demonstration
+np.random.seed(0)
+dates = pd.date_range(start='2022-01-01', periods=365)
+sales = np.random.normal(loc=100, scale=20, size=365)
+sales_series = pd.Series(sales, index=dates)
+
+# Plot the generated sales data
+plt.plot(sales_series)
+plt.title('Generated Sales Data')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.show()
+
+# Fit ARIMA model
+model = ARIMA(sales_series, order=(1, 1, 1))  # Example order, you may need to adjust
+fit_model = model.fit()
+
+# Forecast future demand
+forecast_steps = 12  # Number of steps to forecast
+forecast = fit_model.forecast(steps=forecast_steps)
+
+# Plot the generated sales data and forecast
+plt.plot(sales_series, label='Historical Sales')
+plt.plot(pd.date_range(start=sales_series.index[-1], periods=forecast_steps + 1, freq='M')[1:], forecast, label='Forecast')
+plt.title('Sales Forecast with ARIMA Model')
+plt.xlabel('Date')
+plt.ylabel('Sales')
+plt.legend()
+plt.show()
